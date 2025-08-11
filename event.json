@@ -1,0 +1,6 @@
+{
+  "query": "graph neural networks for citation recommendation",
+  "text": "We explore GNNs for citation ranking and literature mapping.",
+  "top_k": 5,
+  "polish_latex": false
+}

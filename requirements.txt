@@ -1,0 +1,18 @@
+pydantic==2.8.2
+requests==2.32.3
+tqdm==4.66.4
+numpy==1.26.4
+# scipy==1.13.1  # heavy; not required for current pipeline
+networkx==3.3
+python-louvain==0.16
+# sentence-transformers & transformers introduce tokenizers build for Python 3.13; skip locally
+# sentence-transformers==2.7.0
+# transformers==4.42.4
+pymupdf==1.24.8
+rapidfuzz==3.9.4
+bibtexparser==1.4.1
+litellm==1.50.2
+beautifulsoup4==4.12.3
+tenacity==8.3.0
+fastapi==0.112.0
+uvicorn[standard]==0.30.3
