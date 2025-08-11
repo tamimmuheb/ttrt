@@ -156,3 +156,23 @@ MIT
 ## Serverless
 - All compute runs inside Lambda using a container image; no EC2 or managed servers.
 - Optional artifacts (PDF outputs, compiled PDFs) can be stored in S3 via an additional integration, but are not required.
+
+## Frontend (Modern React + Vite)
+
+A modern single-page app is included in `frontend/` to upload PDFs or enter text, run the pipeline, browse papers, explore the graph, and view/copy/download LaTeX + BibTeX.
+
+- Dev:
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  # Open http://localhost:5173
+  ```
+- Configure API endpoint in the app using the Settings button (bottom-right). Set it to your deployed API base URL, e.g. `https://<api-id>.execute-api.us-east-1.amazonaws.com`.
+- Build:
+  ```bash
+  npm run build
+  npm run preview
+  ```
+
+In Cursor, you can open `frontend/index.html` with the dev server, or run the dev task to get a live preview.

@@ -167,6 +167,25 @@ def pipeline(request: PipelineRequest) -> PipelineResponse:
 def handler(event, context):
     # Support both direct invocation with JSON and API Gateway HTTP proxy events
     payload: Dict[str, Any]
+    http_method = None
+    if isinstance(event, dict):
+        rc = event.get("requestContext", {})
+        http = rc.get("http", {})
+        http_method = http.get("method") or event.get("requestContext", {}).get("httpMethod")
+
+    # Handle CORS preflight
+    if http_method == "OPTIONS":
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            },
+            "body": "{}",
+        }
+
     if isinstance(event, str):
         try:
             payload = json.loads(event)
@@ -193,7 +212,10 @@ def handler(event, context):
     if isinstance(event, dict) and ("requestContext" in event or "version" in event or "body" in event):
         return {
             "statusCode": 200,
-            "headers": {"Content-Type": "application/json"},
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
             "body": body_str,
         }
 

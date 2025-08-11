@@ -9,6 +9,8 @@ provider:
   stage: dev
   memorySize: 1024
   timeout: 30
+  httpApi:
+    cors: true
   ecr:
     images:
       pipelineimage:
