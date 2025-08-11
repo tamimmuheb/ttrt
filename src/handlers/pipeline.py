@@ -7,7 +7,7 @@ import numpy as np
 from ..common.types import PipelineRequest, PipelineResponse, Paper, GraphNode, GraphEdge, GraphResult
 from ..common.pdf_utils import extract_text_from_pdf_base64, sanitize_text
 from ..common import semantic_scholar as s2
-from ..common.embeddings import embed_texts, cosine_sim_matrix
+from ..common.embeddings import safe_similarity_scores
 from ..common.graph_builder import build_graph, analyze_graph
 from ..common.latex import generate_bibtex, generate_latex_document
 from ..common.llm import summarize_text, generate_hypothesis, polish_latex
@@ -51,11 +51,8 @@ def pipeline(request: PipelineRequest) -> PipelineResponse:
     papers: List[Paper] = [_to_paper(p) for p in raw_papers]
 
     # 3) Embeddings and similarity
-    texts = [input_text] + [f"{p.title}. {p.abstract or ''}" for p in papers]
-    embs = embed_texts(texts)
-    input_emb = embs[:1]
-    paper_embs = embs[1:]
-    sims = cosine_sim_matrix(input_emb, paper_embs).flatten()
+    texts = [f"{p.title}. {p.abstract or ''}" for p in papers]
+    sims = safe_similarity_scores(input_text, texts)
     for p, s in zip(papers, sims):
         p.embedding = None
         p.rank = float(s)
