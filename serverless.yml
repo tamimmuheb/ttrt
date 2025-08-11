@@ -1,0 +1,40 @@
+service: research-gnn-agent
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: us-east-1
+  stage: dev
+  memorySize: 1024
+  timeout: 30
+  ecr:
+    images:
+      pipelineimage:
+        path: .
+        file: Dockerfile
+
+functions:
+  pipeline:
+    image:
+      name: pipelineimage
+    timeout: 900
+    memorySize: 4096
+    events:
+      - httpApi:
+          path: /pipeline
+          method: post
+    environment:
+      SEMANTIC_SCHOLAR_API_KEY: ${env:SEMANTIC_SCHOLAR_API_KEY, ''}
+      LLM_PROVIDER: ${env:LLM_PROVIDER, 'openai'}
+      LLM_MODEL: ${env:LLM_MODEL, 'gpt-4o-mini'}
+      OPENAI_API_KEY: ${env:OPENAI_API_KEY, ''}
+      OPENROUTER_API_KEY: ${env:OPENROUTER_API_KEY, ''}
+
+package:
+  individually: false
+  patterns:
+    - src/**
+    - requirements.txt
+    - Dockerfile
